@@ -29,7 +29,7 @@ class TaxPayer:
         
         check_png = path.endswith('.png')
         # defends against path traversal attacks
-        if path.startswith('.') or path.startswith('/') or path.startswith('..') or path.startswith('../') or (check_png == False):
+        if path.startswith('/') or path.startswith('..') or path.startswith('../') or (check_png == False):
             return None
 
         # builds path
@@ -51,7 +51,7 @@ class TaxPayer:
         
         check_pdf = path.endswith('.pdf')
         # defends against path traversal attacks
-        if path.startswith('.') or path.startswith('..') or path.startswith('../') or (check_pdf == False):
+        if path.startswith('..') or path.startswith('../') or (check_pdf == False):
             return None
 
         if not path:
@@ -63,7 +63,7 @@ class TaxPayer:
         if not tax_document_path.startswith(base_dir):
             return None
         
-        with open(path, 'rb') as form:
+        with open(tax_document_path, 'rb') as form:
             tax_data = bytearray(form.read())
 
         # assume that tax data is returned on screen after this
