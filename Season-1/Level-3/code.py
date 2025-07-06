@@ -26,15 +26,19 @@ class TaxPayer:
         # setting a profile picture is optional
         if not path:
             pass
-
+        
+        check_png = path.endswith('.png')
         # defends against path traversal attacks
-        if path.startswith('/') or path.startswith('..'):
+        if path.startswith('.') or path.startswith('/') or path.startswith('..') or path.startswith('../') or (check_png == False):
             return None
 
         # builds path
         base_dir = os.path.dirname(os.path.abspath(__file__))
         prof_picture_path = os.path.normpath(os.path.join(base_dir, path))
-
+        
+        if not prof_picture_path.startswith(base_dir):
+            return None
+        
         with open(prof_picture_path, 'rb') as pic:
             picture = bytearray(pic.read())
 
@@ -44,10 +48,21 @@ class TaxPayer:
     # returns the path of an attached tax form that every user should submit
     def get_tax_form_attachment(self, path=None):
         tax_data = None
+        
+        check_pdf = path.endswith('.pdf')
+        # defends against path traversal attacks
+        if path.startswith('.') or path.startswith('..') or path.startswith('../') or (check_pdf == False):
+            return None
 
         if not path:
             raise Exception("Error: Tax form is required for all users")
 
+        # builds path
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        tax_document_path = os.path.normpath(os.path.join(base_dir, path))
+        if not tax_document_path.startswith(base_dir):
+            return None
+        
         with open(path, 'rb') as form:
             tax_data = bytearray(form.read())
 
